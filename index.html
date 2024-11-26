@@ -1,26 +1,150 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
   <head>
-    <meta charset="utf-8" />
-    <script src="https://unpkg.com/vue"></script>
-    <!-- 会使用最新版本，你最好指定一个版本 -->
-    <script src="https://unpkg.com/naive-ui"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>企业官网</title>
+    <script src="https://unpkg.com/vue@3.2.47"></script>
+    <script src="https://unpkg.com/naive-ui@2.34.0"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/naive-ui@2.34.0/dist/naive-ui.min.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .carousel {
+        width: 100%;
+        max-height: 400px;
+        overflow: hidden;
+      }
+      .carousel img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .section {
+        padding: 20px;
+        margin-top: 20px;
+      }
+      .product-card {
+        margin: 10px;
+      }
+    </style>
   </head>
   <body>
     <div id="app">
-      <n-button>{{ message }}</n-button>
+      <!-- 轮播图 -->
+      <div class="carousel">
+        <n-carousel :interval="5000">
+          <n-carousel-item>
+            <img src="https://via.placeholder.com/1200x400?text=轮播图1" alt="轮播图1" />
+          </n-carousel-item>
+          <n-carousel-item>
+            <img src="https://via.placeholder.com/1200x400?text=轮播图2" alt="轮播图2" />
+          </n-carousel-item>
+          <n-carousel-item>
+            <img src="https://via.placeholder.com/1200x400?text=轮播图3" alt="轮播图3" />
+          </n-carousel-item>
+        </n-carousel>
+      </div>
+
+      <!-- 新闻版块 -->
+      <div class="section">
+        <h2>最新新闻</h2>
+        <n-card title="新闻标题 1" style="max-width: 400px;">
+          <div>新闻内容1...</div>
+        </n-card>
+        <n-card title="新闻标题 2" style="max-width: 400px;">
+          <div>新闻内容2...</div>
+        </n-card>
+      </div>
+
+      <!-- 产品展示 -->
+      <div class="section">
+        <h2>产品展示</h2>
+        <div style="display: flex; flex-wrap: wrap;">
+          <n-card title="产品1" class="product-card" style="width: 250px;">
+            <div>产品1描述...</div>
+          </n-card>
+          <n-card title="产品2" class="product-card" style="width: 250px;">
+            <div>产品2描述...</div>
+          </n-card>
+          <n-card title="产品3" class="product-card" style="width: 250px;">
+            <div>产品3描述...</div>
+          </n-card>
+        </div>
+      </div>
+
+      <!-- 联系我们表单 -->
+      <div class="section">
+        <h2>联系我们</h2>
+        <n-form :model="form" :rules="rules" label-width="80px" @submit.prevent="handleSubmit">
+          <n-form-item label="姓名" path="name">
+            <n-input v-model:value="form.name" placeholder="请输入您的姓名" />
+          </n-form-item>
+          <n-form-item label="邮箱" path="email">
+            <n-input v-model:value="form.email" placeholder="请输入您的邮箱" />
+          </n-form-item>
+          <n-form-item label="留言" path="message">
+            <n-input
+              v-model:value="form.message"
+              type="textarea"
+              rows="4"
+              placeholder="请输入您的留言"
+            />
+          </n-form-item>
+          <n-form-item>
+            <n-button type="primary" html-type="submit">提交</n-button>
+          </n-form-item>
+        </n-form>
+      </div>
     </div>
+
     <script>
+      const { ref } = Vue;
+      const { NButton, NCarousel, NCarouselItem, NCard, NForm, NFormItem, NInput } = naive;
+
       const App = {
         setup() {
+          // 表单数据
+          const form = ref({
+            name: '',
+            email: '',
+            message: ''
+          });
+
+          // 表单校验规则
+          const rules = ref({
+            name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
+            email: [{ required: true, message: '邮箱不能为空', trigger: 'blur' }],
+            message: [{ required: true, message: '留言不能为空', trigger: 'blur' }]
+          });
+
+          // 提交表单
+          const handleSubmit = () => {
+            // 模拟发送邮件请求
+            const emailData = {
+              name: form.value.name,
+              email: form.value.email,
+              message: form.value.message
+            };
+            alert('表单已提交，将会发送邮件到 190@qq.com');
+            // 这里你需要调用你的后端接口来处理发送邮件的逻辑
+            console.log('发送邮件数据:', emailData);
+          };
+
           return {
-            message: 'naive'
-          }
+            form,
+            rules,
+            handleSubmit
+          };
         }
-      }
-      const app = Vue.createApp(App)
-      app.use(naive)
-      app.mount('#app')
+      };
+
+      const app = Vue.createApp(App);
+      app.use(naive);
+      app.mount('#app');
     </script>
   </body>
 </html>
